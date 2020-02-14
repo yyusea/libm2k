@@ -50,16 +50,16 @@ public:
 		m_calib_vlsb.push_back(10.0 / ((double)( 1 << 12 )));
 		m_calib_vlsb.push_back(10.0 / ((double)( 1 << 12 )));
 
-		m_filter_compensation_table[75E6] = 1.00;
-		m_filter_compensation_table[75E5] = 1.525879;
-		m_filter_compensation_table[75E4] = 1.164153;
-		m_filter_compensation_table[75E3] = 1.776357;
-		m_filter_compensation_table[75E2] = 1.355253;
-		m_filter_compensation_table[75E1] = 1.033976;
+		m_filter_compensation_table[1E8] = 1.00;
+		m_filter_compensation_table[1E7] = 1.00;
+		m_filter_compensation_table[1E6] = 1.00;
+		m_filter_compensation_table[1E5] = 1.00;
+		m_filter_compensation_table[1E4] = 1.00;
+		m_filter_compensation_table[1E3] = 1.00;
 
 		for (unsigned int i = 0; i < m_dac_devices.size(); i++) {
 			m_cyclic.push_back(true);
-			m_samplerate.push_back(75E6);
+			m_samplerate.push_back(1E8);
 			m_nb_kernel_buffers.push_back(4);
 		}
 
@@ -85,16 +85,16 @@ public:
 	{
 		setOversamplingRatio(0, 1);
 		setOversamplingRatio(1, 1);
-		setSampleRate(0, 75E6);
-		setSampleRate(1, 75E6);
+		setSampleRate(0, 1E8);
+		setSampleRate(1, 1E8);
 		m_calib_vlsb.at(0) = 10.0 / ((double)( 1 << 12 ));
 		m_calib_vlsb.at(1) = 10.0 / ((double)( 1 << 12 ));
 		m_cyclic.at(0) = true;
 		m_cyclic.at(1) = true;
 		enableChannel(0, true);
 		enableChannel(1, true);
-		m_samplerate.at(0) = 75E6;
-		m_samplerate.at(1) = 75E6;
+		m_samplerate.at(0) = 1E8;
+		m_samplerate.at(1) = 1E8;
 	}
 
 	void syncDevice()
