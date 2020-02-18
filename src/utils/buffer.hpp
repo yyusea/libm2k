@@ -70,9 +70,15 @@ public:
 
 	struct iio_buffer* getBuffer();
 private:
+	struct iio_device* m_dev;
+	struct iio_buffer* m_buffer;
+	int m_last_nb_samples;
+	bool m_cyclic;
+	std::vector<Channel*> m_channel_list;
+	std::vector<std::vector<double>> m_data;
+	std::vector<unsigned short> m_data_short;
 
-	class BufferImpl;
-	std::shared_ptr<BufferImpl> m_pimpl;
+	void destroy();
 };
 }
 }
