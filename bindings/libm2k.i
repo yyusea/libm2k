@@ -115,7 +115,6 @@ namespace std {
 	#include <libm2k/analog/m2kanalogin.hpp>
 	#include <libm2k/analog/m2kanalogout.hpp>
 	#include <libm2k/analog/m2kpowersupply.hpp>
-	#include <libm2k/analog/powersupply.hpp>
 
 	#include <libm2k/digital/genericdigital.hpp>
 	#include <libm2k/digital/enums.hpp>
@@ -233,7 +232,6 @@ namespace std {
 %include <libm2k/analog/m2kanalogin.hpp>
 %include <libm2k/analog/m2kanalogout.hpp>
 %include <libm2k/analog/m2kpowersupply.hpp>
-%include <libm2k/analog/powersupply.hpp>
 
 %include <libm2k/digital/genericdigital.hpp>
 %include <libm2k/digital/enums.hpp>
