@@ -79,8 +79,8 @@ std::vector<std::string>M2kHardwareTriggerImpl:: m_trigger_logic_mode = {
 typedef std::pair<Channel *, std::string> channel_pair;
 
 M2kHardwareTriggerImpl::M2kHardwareTriggerImpl(struct iio_context *ctx, bool init) :
-	DeviceIn (ctx, "m2k-adc-trigger"),
-	M2kHardwareTrigger()
+	M2kHardwareTrigger(),
+	DeviceIn (ctx, "m2k-adc-trigger")
 {
 	std::vector<std::pair<Channel*, std::string>> channels;
 	for (unsigned int i = 0; i < getNbChannels(false); i++) {
@@ -167,13 +167,13 @@ void M2kHardwareTriggerImpl::M2kHardwareTriggerImpl::init()
 {
 	setAnalogSource(CHANNEL_1);
 	setAnalogDelay(0);
-	for (int i = 0; i < m_analog_channels.size(); i++) {
+	for (unsigned int i = 0; i < m_analog_channels.size(); i++) {
 		setAnalogMode(i, ALWAYS);
 		setAnalogLevel(i, 0.0);
 		setAnalogHysteresis(i, 0.0);
 	}
 
-	for (int i = 0; i < m_digital_channels.size(); i++) {
+	for (unsigned int i = 0; i < m_digital_channels.size(); i++) {
 		setDigitalCondition(i, NO_TRIGGER_DIGITAL);
 	}
 	setDigitalDelay(0);
