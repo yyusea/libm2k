@@ -61,7 +61,7 @@ public:
 	const double *getSamplesInterleaved(unsigned int nb_samples,
 					std::function<double(int16_t, unsigned int)> process);
 	const short *getSamplesRawInterleaved(unsigned int nb_samples);
-	void* getSamplesRawInterleavedVoid(int nb_samples);
+	void* getSamplesRawInterleavedVoid(unsigned int nb_samples);
 
 	void stop();
 	void setCyclic(bool enable);
@@ -72,7 +72,7 @@ public:
 private:
 	struct iio_device* m_dev;
 	struct iio_buffer* m_buffer;
-	int m_last_nb_samples;
+	unsigned int m_last_nb_samples;
 	bool m_cyclic;
 	std::vector<Channel*> m_channel_list;
 	std::vector<std::vector<double>> m_data;

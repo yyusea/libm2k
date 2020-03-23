@@ -300,6 +300,7 @@ std::vector<unsigned short> Buffer::getSamples(unsigned int nb_samples)
 {
 	if (Utils::getIioDeviceDirection(m_dev) == OUTPUT) {
 		throw_exception(EXC_RUNTIME_ERROR, "Device not input-buffer capable, so no buffer was created");
+		return std::vector<unsigned short>();
 	}
 
 	m_data_short.clear();
@@ -313,6 +314,7 @@ std::vector<unsigned short> Buffer::getSamples(unsigned int nb_samples)
 
 	if (!m_buffer) {
 		throw_exception(EXC_INVALID_PARAMETER, "Buffer: Cannot create the RX buffer");
+		return std::vector<unsigned short>();
 	}
 
 	int ret = iio_buffer_refill(m_buffer);
@@ -321,10 +323,11 @@ std::vector<unsigned short> Buffer::getSamples(unsigned int nb_samples)
 	if (ret < 0) {
 		destroy();
 		throw_exception(EXC_INVALID_PARAMETER, "Buffer: Cannot refill RX buffer");
+		return std::vector<unsigned short>();
 	}
 
 	unsigned short* data = (unsigned short*)iio_buffer_start(m_buffer);
-	for (int i = 0; i < nb_samples; i++) {
+	for (unsigned int i = 0; i < nb_samples; i++) {
 		m_data_short.push_back(data[i]);
 	}
 
@@ -335,6 +338,7 @@ const unsigned short* Buffer::getSamplesP(unsigned int nb_samples)
 {
 	if (Utils::getIioDeviceDirection(m_dev) == OUTPUT) {
 		throw_exception(EXC_RUNTIME_ERROR, "Device not input-buffer capable, so no buffer was created");
+		return nullptr;
 	}
 
 	bool new_buffer = (nb_samples != m_last_nb_samples);
@@ -346,6 +350,7 @@ const unsigned short* Buffer::getSamplesP(unsigned int nb_samples)
 
 	if (!m_buffer) {
 		throw_exception(EXC_INVALID_PARAMETER, "Buffer: Cannot create the RX buffer");
+		return nullptr;
 	}
 
 	int ret = iio_buffer_refill(m_buffer);
@@ -354,6 +359,7 @@ const unsigned short* Buffer::getSamplesP(unsigned int nb_samples)
 	if (ret < 0) {
 		destroy();
 		throw_exception(EXC_INVALID_PARAMETER, "Buffer: Cannot refill RX buffer");
+		return nullptr;
 	}
 
 	const unsigned short* data = (const unsigned short*)iio_buffer_start(m_buffer);
@@ -366,11 +372,12 @@ const short* Buffer::getSamplesRawInterleaved(unsigned int nb_samples)
 	return static_cast<const short*>(getSamplesRawInterleavedVoid(nb_samples));
 }
 
-void* Buffer::getSamplesRawInterleavedVoid(int nb_samples)
+void* Buffer::getSamplesRawInterleavedVoid(unsigned int nb_samples)
 {
 	bool anyChannelEnabled = false;
 	if (Utils::getIioDeviceDirection(m_dev) != INPUT) {
 		throw_exception(EXC_INVALID_PARAMETER, "Device not found, so no buffer was created");
+		return nullptr;
 	}
 
 	for (auto chn : m_channel_list) {
@@ -380,6 +387,7 @@ void* Buffer::getSamplesRawInterleavedVoid(int nb_samples)
 
 	if (!anyChannelEnabled) {
 		throw_exception(EXC_INVALID_PARAMETER, "Buffer: No channel enabled for RX buffer");
+		return nullptr;
 	}
 
 	bool new_buffer = (nb_samples != m_last_nb_samples);
@@ -391,12 +399,14 @@ void* Buffer::getSamplesRawInterleavedVoid(int nb_samples)
 
 	if (!m_buffer) {
 		throw_exception(EXC_INVALID_PARAMETER, "Buffer: Can't create the RX buffer");
+		return nullptr;
 	}
 
 	ssize_t ret = iio_buffer_refill(m_buffer);
 	if (ret < 0) {
 		destroy();
 		throw_exception(EXC_INVALID_PARAMETER, "Buffer: Cannot refill RX buffer");
+		return nullptr;
 	}
 
 	return m_channel_list.at(0)->getFirstVoid(m_buffer);
@@ -443,7 +453,7 @@ std::vector<std::vector<double>> Buffer::getSamples(unsigned int nb_samples,
 		bool en  = chn->isEnabled();
 		channels_enabled.push_back(en);
 		std::vector<double> data {};
-		for (int j = 0; j < nb_samples; j++) {
+		for (unsigned int j = 0; j < nb_samples; j++) {
 			data.push_back(0);
 		}
 		m_data.push_back(data);
