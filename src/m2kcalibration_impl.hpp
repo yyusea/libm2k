@@ -27,6 +27,7 @@
 #include <libm2k/m2khardwaretrigger.hpp>
 #include "analog/m2kanalogin_impl.hpp"
 #include "analog/m2kanalogout_impl.hpp"
+#include <libm2k/analog/dmm.hpp>
 #include <cstdint>
 #include <cstdlib>
 #include <string>
@@ -39,7 +40,7 @@ class M2kCalibrationImpl : public M2kCalibration
 {
 public:
 	M2kCalibrationImpl(struct iio_context* ctx, libm2k::analog::M2kAnalogIn* analogIn,
-		       libm2k::analog::M2kAnalogOut* analogOut);
+		       libm2k::analog::M2kAnalogOut* analogOut, libm2k::analog::DMM *dmm);
 	virtual ~M2kCalibrationImpl();
 
 	bool initialize();
@@ -74,6 +75,12 @@ public:
 
 	bool setCalibrationMode(int);
 
+	std::pair<double, std::map<libm2k::CALIBRATION_PARAMETER, double>> getCalibrationParameters() override;
+	void setCalibrationParameters(std::map<libm2k::CALIBRATION_PARAMETER, double> &calibrationParameters) override;
+	bool calibrateADC(const std::string &serialNumber, const std::string &path) override;
+	bool calibrateDAC(const std::string &serialNumber, const std::string &path) override;
+	bool calibrateAll(const std::string &serialNumber, const std::string &path) override;
+
 private:
 	bool m_cancel;
 
@@ -81,6 +88,7 @@ private:
 	libm2k::analog::M2kAnalogInImpl* m_m2k_adc;
 	libm2k::analog::M2kAnalogOutImpl* m_m2k_dac;
 	M2kHardwareTrigger* m_m2k_trigger;
+	libm2k::analog::DMM* m_dmm;
 
 	int m_adc_ch0_offset;
 	int m_adc_ch1_offset;
@@ -118,6 +126,8 @@ private:
 	void configDacSamplerate();
 	bool fine_tune(size_t span, int16_t centerVal0, int16_t centerVal1, size_t num_samples);
 	int16_t processRawSample(int16_t value);
+	std::map<libm2k::CALIBRATION_PARAMETER, double> readFromFileCalibrationParameters(const std::string &serialNumber, const std::string &path);
+
 };
 
 }

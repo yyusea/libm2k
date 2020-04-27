@@ -29,6 +29,7 @@
 #include <string>
 #include <memory>
 #include <vector>
+#include <map>
 
 namespace libm2k {
 
@@ -55,6 +56,12 @@ public:
 	virtual double dacBvlsb() const = 0;
 
 	virtual bool resetCalibration() = 0;
+
+	virtual std::pair<double, std::map<libm2k::CALIBRATION_PARAMETER, double>> getCalibrationParameters() = 0;
+	virtual void setCalibrationParameters(std::map<libm2k::CALIBRATION_PARAMETER, double> &calibrationParameters) = 0;
+	virtual bool calibrateADC(const std::string &serialNumber, const std::string &path) = 0;
+	virtual bool calibrateDAC(const std::string &serialNumber, const std::string &path) = 0;
+	virtual bool calibrateAll(const std::string &serialNumber, const std::string &path) = 0;
 };
 
 }

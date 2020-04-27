@@ -81,7 +81,7 @@ M2kImpl::M2kImpl(std::string uri, iio_context* ctx, std::string name, bool sync)
 	scanAllAnalogOut();
 	scanAllPowerSupply();
 	scanAllDigital();
-	m_calibration = new M2kCalibrationImpl(ctx, getAnalogIn(), getAnalogOut());
+	m_calibration = new M2kCalibrationImpl(ctx, getAnalogIn(), getAnalogOut(), getDMM("ad9963"));
 }
 
 M2kImpl::~M2kImpl()
@@ -212,6 +212,31 @@ bool M2kImpl::calibrateADC()
 bool M2kImpl::calibrateDAC()
 {
 	return m_calibration->calibrateDAC();
+}
+
+std::pair<double, std::map<libm2k::CALIBRATION_PARAMETER, double>> M2kImpl::getCalibrationParameters()
+{
+	return m_calibration->getCalibrationParameters();
+}
+
+void M2kImpl::setCalibrationParameters(map<libm2k::CALIBRATION_PARAMETER, double> &calibrationParameters)
+{
+	m_calibration->setCalibrationParameters(calibrationParameters);
+}
+
+bool M2kImpl::calibrateADCFromFile(const string &path)
+{
+	return m_calibration->calibrateADC(getSerialNumber(), path);
+}
+
+bool M2kImpl::calibrateDACFromFile(const string &path)
+{
+	return m_calibration->calibrateDAC(getSerialNumber(), path);
+}
+
+bool M2kImpl::calibrateAllFromFile(const string &path)
+{
+	return m_calibration->calibrateAll(getSerialNumber(), path);
 }
 
 double M2kImpl::getAdcCalibrationGain(unsigned int chn)

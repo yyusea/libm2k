@@ -49,6 +49,12 @@ public:
 	bool calibrateDAC();
 	bool resetCalibration();
 
+	std::pair<double, std::map<libm2k::CALIBRATION_PARAMETER, double>> getCalibrationParameters() override;
+	void setCalibrationParameters(std::map<libm2k::CALIBRATION_PARAMETER, double> &calibrationParameters) override;
+	bool calibrateADCFromFile(const std::string &path) override;
+	bool calibrateDACFromFile(const std::string &path) override;
+	bool calibrateAllFromFile(const std::string &path) override;
+
 	libm2k::digital::M2kDigital* getDigital();
 	libm2k::analog::M2kPowerSupply* getPowerSupply();
 	libm2k::analog::M2kAnalogIn* getAnalogIn();
