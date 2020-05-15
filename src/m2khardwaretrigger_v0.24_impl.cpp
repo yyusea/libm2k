@@ -150,7 +150,7 @@ void M2kHardwareTriggerV024Impl::setDigitalSource(M2K_TRIGGER_SOURCE_DIGITAL ext
 		external_src = SRC_TRIGGER_IN;
 	}
 
-	m_digital_trigger_device->setStringValue(16, "trigger_mux_out",
+	m_digital_trigger_device->setStringValue(16 + 1, "trigger_mux_out",
 						 m_trigger_ext_digital_source.at(external_src));
 }
 
@@ -167,7 +167,7 @@ M2K_TRIGGER_SOURCE_DIGITAL M2kHardwareTriggerV024Impl::getDigitalSource() const
 		M2kHardwareTriggerImpl::getDigitalSource();
 	}
 
-	std::string buf = m_digital_trigger_device->getStringValue(16, "trigger_mux_out");
+	std::string buf = m_digital_trigger_device->getStringValue(16+1, "trigger_mux_out");
 	auto it = std::find(m_trigger_ext_digital_source.begin(),
 			    m_trigger_ext_digital_source.end(), buf.c_str());
 	if  (it == m_trigger_ext_digital_source.end()) {
