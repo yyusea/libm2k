@@ -407,6 +407,9 @@ public:
 	 */
 	virtual void getSamples(std::vector<unsigned short> &data, unsigned int nb_samples) = 0;
 
+	virtual void setRateMux() = 0;
+	virtual void resetRateMux() = 0;
+
 };
 }
 }
