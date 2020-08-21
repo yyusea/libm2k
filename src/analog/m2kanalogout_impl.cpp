@@ -431,19 +431,24 @@ void M2kAnalogOutImpl::push(std::vector<std::vector<double>> const &data)
 	bool allChannelsPushed = (data.size() != getNbChannels()) ? false : true;
 
 	for (unsigned int  chn = 0; chn < data.size(); chn++) {
-		streamingData &= !getCyclic(chn);
-		allChannelsPushed &= (data.at(chn).size() != 0);
+		if (!data.at(chn).empty()) {
+			streamingData &= !getCyclic(chn);
+			allChannelsPushed &= (!data.at(chn).empty());
+		}
 	}
 
 	if (streamingData && m_dma_data_available) {
 		// all kernel buffers are empty when maximum buffer space is equal with the unused space
 		unsigned int unusedBufferSpace, maxBufferSpace;
 		for (unsigned int  chn = 0; chn < data.size(); chn++) {
-			size_t size = data.at(chn).size();
-			m_dac_devices.at(chn)->initializeBuffer(size, false);
-			unusedBufferSpace = m_dac_devices[chn]->getBufferLongValue("data_available");
-			maxBufferSpace = 2u * size * (m_nb_kernel_buffers.at(chn) - 1);
-			isBufferEmpty &= (maxBufferSpace == unusedBufferSpace);
+			if (!data.at(chn).empty()) {
+				size_t size = data.at(chn).size();
+				m_dac_devices.at(chn)->initializeBuffer(size, false);
+				unusedBufferSpace = m_dac_devices[chn]->getBufferLongValue(
+					"data_available");
+				maxBufferSpace = 2u * size * (m_nb_kernel_buffers.at(chn) - 1);
+				isBufferEmpty &= (maxBufferSpace == unusedBufferSpace);
+			}
 		}
 		if (isBufferEmpty) {
 			// when kernel buffers are empty both channels must be synchronized
@@ -454,13 +459,16 @@ void M2kAnalogOutImpl::push(std::vector<std::vector<double>> const &data)
 	}
 
 	for (unsigned int chn = 0; chn < data.size(); chn++) {
-		size_t size = data.at(chn).size();
-		std::vector<short> raw_data_buffer = {};
-		for (unsigned int i = 0; i < size; i++) {
-			raw_data_buffer.push_back(convertVoltsToRaw(chn, data[chn][i]));
+		if (!data.at(chn).empty()) {
+			size_t size = data.at(chn).size();
+			std::vector<short> raw_data_buffer = {};
+			raw_data_buffer.reserve(size);
+			for (unsigned int i = 0; i < size; i++) {
+				raw_data_buffer.push_back(convertVoltsToRaw(chn, data[chn][i]));
+			}
+			m_dac_devices.at(chn)->push(raw_data_buffer, 0, getCyclic(chn));
+			data_buffers.push_back(raw_data_buffer);
 		}
-		m_dac_devices.at(chn)->push(raw_data_buffer, 0, getCyclic(chn));
-		data_buffers.push_back(raw_data_buffer);
 	}
 
 	if ((streamingData && isBufferEmpty) || !streamingData) {
