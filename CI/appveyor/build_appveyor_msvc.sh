@@ -3,6 +3,7 @@
 set -e
 MCS_EXECUTABLE_PATH="C:\Windows\Microsoft.NET\Framework\v4.0.30319"
 OLD_PATH="$PATH"
+DEST_LIBIIO="/c/libiio"
 
 __build_libm2k() {
 	local PLATFORM="$1"
@@ -20,8 +21,8 @@ __build_libm2k() {
 	export PATH="$PY_PATH;$PY_PATH/libs;$OLD_PATH"
 	cd /c/projects/libm2k/tmp-build-"$PLATFORM"
 	cmake -G "$GENERATOR" \
-        -DIIO_LIBRARIES:FILEPATH=/c/libiio-"$PLATFORM"/libiio.lib \
-        -DIIO_INCLUDE_DIRS:PATH=/c/libiio-"$PLATFORM" \
+	-DIIO_LIBRARIES:FILEPATH="$DEST_LIBIIO"-"$PLATFORM"/libiio.lib \
+	-DIIO_INCLUDE_DIRS:PATH="$DEST_LIBIIO"-"$PLATFORM" \
         -DCMAKE_CONFIGURATION_TYPES=RELEASE \
         -DSWIG_DIR=/c/swig/Lib \
         -DSWIG_EXECUTABLE=/c/swig/swig.exe \
@@ -31,7 +32,7 @@ __build_libm2k() {
         -DPython_EXECUTABLE="$PY_PATH/python.exe" \
         -DBUILD_EXAMPLES=ON \
         -DENABLE_CSHARP=ON \
-	 -DENABLE_LABVIEW=ON \
+	-DENABLE_LABVIEW=ON \
         ..
 	cmake --build . --config Release
 
