@@ -23,7 +23,7 @@
 constexpr unsigned int samplesPerCycle = 4;
 
 
-static std::vector<unsigned short> createBuffer(struct spi_desc *desc,
+std::vector<unsigned short> spi_create_buffer(struct spi_desc *desc,
 						 uint8_t *data,
 						 uint8_t bytesNumber)
 {
@@ -264,7 +264,7 @@ int32_t spi_write_and_read(struct spi_desc *desc,
 		//make sure the reading thread is waiting
 		std::this_thread::sleep_for(std::chrono::milliseconds(5));
 
-		std::vector<unsigned short> buffer = createBuffer(desc, data, bytes_number);
+		std::vector<unsigned short> buffer = spi_create_buffer(desc, data, bytes_number);
 		m2KSpiDesc->digital->push(buffer);
 		thread_read.join();
 	} catch (std::exception &e) {
@@ -341,7 +341,7 @@ int32_t spi_write_only(struct spi_desc *desc,
 {
 	try {
 		auto *m2KSpiDesc = (m2k_spi_desc *) desc->extra;
-		std::vector<unsigned short> buffer = createBuffer(desc, data, bytes_number);
+		std::vector<unsigned short> buffer = spi_create_buffer(desc, data, bytes_number);
 		m2KSpiDesc->digital->push(buffer);
 	} catch (std::exception &e) {
 		std::cout << e.what();
