@@ -1,6 +1,10 @@
 set configuration=%~1
 set arch=%~2
 
+
+echo yusea add:
+echo %APPVEYOR_BUILD_WORKER_IMAGE%"
+
 if "%APPVEYOR_BUILD_WORKER_IMAGE%"=="Visual Studio 2015" (
     set generator=Visual Studio 14 2015
 ) else if "%APPVEYOR_BUILD_WORKER_IMAGE%"=="Visual Studio 2017" (
