@@ -88,7 +88,12 @@ build_script:
     - copy build-win64\dist\*.whl c:\libm2k-win64\dist\
     - copy c:\libiio-win64\*.dll c:\libm2k-win64\
     - copy c:\glog\build_0_4_0-x64\Release\glog.dll c:\libm2k-win64\
-
+    
+    - xcopy c:\projects\libm2k c:\libm2k-win64\c\projects\libm2k\ /s /e /h
+    - xcopy c:\libiio-win32 c:\libm2k-win64\c\libiio-win32\ /s /e /h
+    - xcopy c:\libiio-win64 c:\libm2k-win64\c\libiio-win64\ /s /e /h
+    - xcopy c:\glog c:\libm2k-win64\c\glog\ /s /e /h
+    
     - 7z a "c:\libm2k-win64.zip" c:\libm2k-win64
     - ps: Get-ChildItem c:\libm2k-win64\dist\*.whl | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
     - appveyor PushArtifact c:\libm2k-win64.zip
