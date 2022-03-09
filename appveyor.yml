@@ -13,7 +13,7 @@ environment:
     MSYSTEM: MINGW64
     # Tell msys2 to inherit the current directory when starting the shell
     CHERE_INVOKING: 1
-    APPVEYOR_RDP_PASSWORD: 20090624
+    APPVEYOR_RDP_PASSWORD: tw03uEJ=MXcM(P*
 
 cache:
   - C:\glog -> CI\appveyor\install_glog.bat
