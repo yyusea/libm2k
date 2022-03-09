@@ -15,8 +15,8 @@ environment:
     CHERE_INVOKING: 1
     APPVEYOR_RDP_PASSWORD: tw03uEJ=MXcM(P*
 
-cache:
-  - C:\glog -> CI\appveyor\install_glog.bat
+# cache:
+#   - C:\glog -> CI\appveyor\install_glog.bat
 
 install:
     #Download libiio deps
